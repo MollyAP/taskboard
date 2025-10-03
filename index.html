@@ -1,137 +1,146 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MoSH Task Board</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MoSH Task Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="brand">
-            <div class="logo logo--tight">
-                <svg width="117" height="50" viewBox="0 0 117 50" xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor">
-                    <g fill-rule="evenodd" clip-rule="evenodd">
-                        <path
-                            d="M34.6924 14.117L27.7879 25.7571L20.7101 14.117H16.0214V34.2871H21.2844V23.8845L26.4362 32.2924H28.9677L34.1448 23.5934L34.204 34.282H39.4403L39.3811 14.117H34.6924Z" />
-                        <path
-                            d="M64.6686 34.0844C63.1334 33.6813 61.8886 33.1445 60.9299 32.4669L62.7989 28.2622C63.6984 28.8561 64.7459 29.338 65.9336 29.7042C67.1235 30.0676 68.2895 30.2504 69.4433 30.2504C71.6301 30.2504 72.7239 29.7042 72.7239 28.6083C72.7239 28.0332 72.4147 27.6055 71.7891 27.3259C71.1656 27.0463 70.1643 26.7552 68.783 26.4482C67.2665 26.1216 66.003 25.7734 64.9858 25.3963C63.97 25.0235 63.098 24.421 62.3698 23.593C61.6408 22.7658 61.2753 21.6561 61.2753 20.2539C61.2753 19.0264 61.6076 17.9153 62.2845 16.9248C62.955 15.9351 63.9541 15.1534 65.2885 14.5754C66.6243 13.9989 68.257 13.7078 70.1954 13.7078C71.5174 13.7078 72.82 13.8566 74.1096 14.155C75.3927 14.4548 76.5247 14.8897 77.5008 15.464L75.7495 19.7019C73.8293 18.6645 71.9719 18.145 70.1679 18.145C69.0344 18.145 68.2137 18.3098 67.6942 18.6493C67.1741 18.9874 66.9176 19.4223 66.9176 19.9577C66.9176 20.4944 67.2246 20.8976 67.8366 21.1699C68.4499 21.4387 69.4397 21.7176 70.8008 22.0058C72.336 22.3302 73.606 22.6806 74.6124 23.0577C75.6202 23.4312 76.4944 24.0287 77.2306 24.8436C77.9675 25.6592 78.3395 26.7704 78.3395 28.1726C78.3395 29.3806 78.0029 30.4758 77.3317 31.4591C76.6598 32.4387 75.6535 33.2233 74.3112 33.8085C72.9696 34.3958 71.3354 34.687 69.4202 34.687C67.7824 34.687 66.2017 34.4847 64.6686 34.0844Z" />
-                        <path
-                            d="M94.2695 14.117V21.6941H86.501V14.117H80.8038V34.2871H86.501V26.4211H94.2695V34.282H99.9661V14.117H94.2695Z" />
-                        <path
-                            d="M58.5683 22.2843C57.8191 21.0641 56.7773 20.1134 55.4343 19.4335C54.0934 18.7501 52.5755 18.412 50.8879 18.412C49.2024 18.412 47.6882 18.7544 46.3596 19.4335C45.0238 20.1134 43.9813 21.0735 43.222 22.2995C42.4649 23.5269 42.0841 24.914 42.0841 26.4485C42.0841 28.0054 42.4649 29.3954 43.222 30.6264C43.9777 31.8582 45.0274 32.8176 46.3704 33.5097C47.7127 34.2004 49.2176 34.5472 50.8879 34.5472C52.5755 34.5472 54.0934 34.2004 55.4343 33.5097C56.7773 32.8176 57.8234 31.8582 58.5683 30.6264C59.3167 29.3997 59.6888 28.0054 59.6888 26.4485C59.6938 24.8895 59.3167 23.5045 58.5683 22.2843ZM50.8879 30.6004C48.6122 30.6004 46.7692 28.7553 46.7692 26.4767C46.7692 24.1952 48.6151 22.3501 50.8879 22.3501C53.1643 22.3501 55.008 24.1952 55.008 26.4767C55.008 28.7553 53.1607 30.6004 50.8879 30.6004Z" />
-                    </g>
-                </svg>
-            </div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="brand">
+      <div class="logo logo--tight" aria-label="MoSH wordmark">
+        <svg width="117" height="50" viewBox="0 0 117 50" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <g fill-rule="evenodd" clip-rule="evenodd">
+            <path d="M34.6924 14.117L27.7879 25.7571L20.7101 14.117H16.0214V34.2871H21.2844V23.8845L26.4362 32.2924H28.9677L34.1448 23.5934L34.204 34.282H39.4403L39.3811 14.117H34.6924Z"/>
+            <path d="M64.6686 34.0844C63.1334 33.6813 61.8886 33.1445 60.9299 32.4669L62.7989 28.2622C63.6984 28.8561 64.7459 29.338 65.9336 29.7042C67.1235 30.0676 68.2895 30.2504 69.4433 30.2504C71.6301 30.2504 72.7239 29.7042 72.7239 28.6083C72.7239 28.0332 72.4147 27.6055 71.7891 27.3259C71.1656 27.0463 70.1643 26.7552 68.783 26.4482C67.2665 26.1216 66.003 25.7734 64.9858 25.3963C63.97 25.0235 63.098 24.421 62.3698 23.593C61.6408 22.7658 61.2753 21.6561 61.2753 20.2539C61.2753 19.0264 61.6076 17.9153 62.2845 16.9248C62.955 15.9351 63.9541 15.1534 65.2885 14.5754C66.6243 13.9989 68.257 13.7078 70.1954 13.7078C71.5174 13.7078 72.82 13.8566 74.1096 14.155C75.3927 14.4548 76.5247 14.8897 77.5008 15.464L75.7495 19.7019C73.8293 18.6645 71.9719 18.145 70.1679 18.145C69.0344 18.145 68.2137 18.3098 67.6942 18.6493C67.1741 18.9874 66.9176 19.4223 66.9176 19.9577C66.9176 20.4944 67.2246 20.8976 67.8366 21.1699C68.4499 21.4387 69.4397 21.7176 70.8008 22.0058C72.336 22.3302 73.606 22.6806 74.6124 23.0577C75.6202 23.4312 76.4944 24.0287 77.2306 24.8436C77.9675 25.6592 78.3395 26.7704 78.3395 28.1726C78.3395 29.3806 78.0029 30.4758 77.3317 31.4591C76.6598 32.4387 75.6535 33.2233 74.3112 33.8085C72.9696 34.3958 71.3354 34.687 69.4202 34.687C67.7824 34.687 66.2017 34.4847 64.6686 34.0844Z"/>
+            <path d="M94.2695 14.117V21.6941H86.501V14.117H80.8038V34.2871H86.501V26.4211H94.2695V34.282H99.9661V14.117H94.2695Z"/>
+            <path d="M58.5683 22.2843C57.8191 21.0641 56.7773 20.1134 55.4343 19.4335C54.0934 18.7501 52.5755 18.412 50.8879 18.412C49.2024 18.412 47.6882 18.7544 46.3596 19.4335C45.0238 20.1134 43.9813 21.0735 43.222 22.2995C42.4649 23.5269 42.0841 24.914 42.0841 26.4485C42.0841 28.0054 42.4649 29.3954 43.222 30.6264C43.9777 31.8582 45.0274 32.8176 46.3704 33.5097C47.7127 34.2004 49.2176 34.5472 50.8879 34.5472C52.5755 34.5472 54.0934 34.2004 55.4343 33.5097C56.7773 32.8176 57.8234 31.8582 58.5683 30.6264C59.3167 29.3997 59.6888 28.0054 59.6888 26.4485C59.6938 24.8895 59.3167 23.5045 58.5683 22.2843ZM50.8879 30.6004C48.6122 30.6004 46.7692 28.7553 46.7692 26.4767C46.7692 24.1952 48.6151 22.3501 50.8879 22.3501C53.1643 22.3501 55.008 24.1952 55.008 26.4767C55.008 28.7553 53.1607 30.6004 50.8879 30.6004Z"/>
+          </g>
+        </svg>
+      </div>
+      <div class="title">Internal Web Requests</div>
+    </div>
 
+    <div class="actions">
+      <button id="addTaskBtn" class="btn primary">Add Task</button>
+      <button id="refreshBtn" class="btn">Refresh</button>
+      <!-- Sign-in / Sign-out buttons will be injected by app.js -->
+    </div>
+  </header>
 
-            <div class="title">Internal Web Requests</div>
-        </div>
-        <div class="actions">
-            <button id="addTaskBtn" class="btn primary">Add Task</button>
-            <button id="refreshBtn" class="btn">Refresh</button>
-        </div>
-    </header>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <h1>MoSH Web Requests</h1>
+      <p>Submit requests and track their progress here.</p>
+    </div>
+  </section>
 
+  <!-- Board -->
+  <main class="board" id="board">
+    <div class="column" data-label="requested">
+      <h2>Requested</h2>
+      <div class="lane" id="lane-requested"></div>
+    </div>
 
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <h1>MoSH Web Requests</h1>
-            <p>Submit requests and track their progress here.</p>
-        </div>
-    </section>
+    <div class="column" data-label="priority">
+      <h2>Priority <span class="tag tag-priority">Jeff-approved</span></h2>
+      <div class="lane" id="lane-priority"></div>
+    </div>
 
+    <div class="column" data-label="in-progress">
+      <h2>In Progress</h2>
+      <div class="lane" id="lane-in-progress"></div>
+    </div>
 
-    <main class="board" id="board">
-        <div class="column" data-label="requested">
-            <h2>Requested</h2>
-            <div class="lane" id="lane-requested"></div>
-        </div>
-        <div class="column" data-label="priority">
-            <h2>Priority <span class="tag tag-priority">Jeff‑approved</span></h2>
-            <div class="lane" id="lane-priority"></div>
-        </div>
-        <div class="column" data-label="in-progress">
-            <h2>In Progress</h2>
-            <div class="lane" id="lane-in-progress"></div>
-        </div>
-        <div class="column" data-label="finished">
-            <h2>Finished</h2>
-            <div class="lane" id="lane-finished"></div>
-        </div>
-    </main>
+    <div class="column" data-label="finished">
+      <h2>Finished</h2>
+      <div class="lane" id="lane-finished"></div>
+    </div>
+  </main>
 
+  <!-- Footer -->
+  <footer class="site-footer">
+    <small>Data syncs live from Firestore. Priority can be approved by Jeff only.</small>
+  </footer>
 
-    <footer class="site-footer">
-        <small>Data syncs from GitHub Issues. Columns reflect labels. Priority label is added by Jeff only.</small>
-    </footer>
+  <!-- Add Task Modal -->
+  <dialog id="taskModal">
+    <form method="dialog" id="taskForm" class="modal">
+      <h3>New Task Request</h3>
+      <p class="disclaimer">All tasks start as <strong>Requested</strong>. Only Jeff can approve <strong>Priority</strong>.</p>
 
+      <label>
+        Your name
+        <input id="submitterName" type="text" placeholder="e.g., Jane Doe" required />
+      </label>
 
-    <!-- Add Task Modal -->
-    <dialog id="taskModal">
-        <form method="dialog" id="taskForm" class="modal">
-            <h3>New Task Request</h3>
-            <p class="disclaimer">All tasks start as <strong>Requested</strong>. Only Jeff can approve
-                <strong>Priority</strong>.</p>
-            <label>
-                Your name
-                <input id="submitterName" type="text" placeholder="e.g., Jane Doe" required />
-            </label>
-            <label>
-                Short title
-                <input id="taskTitle" type="text" placeholder="e.g., Update Laser Live event card" required />
-            </label>
-            <label>
-                Details
-                <textarea id="taskDetails" rows="5" placeholder="URLs, copy, assets, deadlines" required></textarea>
-            </label>
-            <label>
-                Request priority? (Jeff must approve)
-                <select id="taskPriority">
-                    <option>Not requesting priority</option>
-                    <option>Requesting priority (subject to Jeff approval)</option>
-                </select>
-            </label>
-            <div class="row">
-                <button class="btn" id="cancelModal">Cancel</button>
-                <button class="btn primary" id="submitIssue">Submit via GitHub</button>
-            </div>
-        </form>
-    </dialog>
+      <label>
+        Short title
+        <input id="taskTitle" type="text" placeholder="e.g., Update event card" required />
+      </label>
 
+      <label>
+        Details
+        <textarea id="taskDetails" rows="5" placeholder="URLs, copy, assets, deadlines" required></textarea>
+      </label>
 
-<!-- Firebase (CDN compat builds) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore-compat.js"></script>
+      <label>
+        Attach files (optional)
+        <input id="taskFiles" type="file" multiple
+               accept="image/*,application/pdf,application/zip,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+      </label>
 
-<script>
-  // TODO: replace with your config from Firebase console (Project settings → Web app)
-  const firebaseConfig = {
-    apiKey: "AIzaSyALQgOtVWbq5HzjDkw382SDq9mkph_6Uto",
-    authDomain: "Taskboard.firebaseapp.com",
-    projectId: "taskboard-9f9ce",
-  };
+      <label>
+        Request priority? (Jeff must approve)
+        <select id="taskPriority">
+          <option>Not requesting priority</option>
+          <option>Requesting priority (subject to Jeff approval)</option>
+        </select>
+      </label>
 
-  firebase.initializeApp(firebaseConfig);
-  // No sign-up required: anonymous session
-  firebase.auth().signInAnonymously().catch(console.error);
-  window.DB = firebase.firestore();
+      <div class="row">
+        <button class="btn" id="cancelModal">Cancel</button>
+        <button class="btn primary" id="submitIssue">Submit</button>
+      </div>
+    </form>
+  </dialog>
 
-  // passwords (change OWNER to whatever you want)
-  window.MOSH_PERMS = {
-    JEFF_PASS: "approved",
-    OWNER_PASS: "owner"
-  };
-</script>
+  <!-- Firebase CDN compat builds -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-storage-compat.js"></script>
 
-    <script src="assets/app.js" type="module"></script>
+  <!-- Firebase boot + globals -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyALQgOtVWbq5HzjDkw382SDq9mkph_6Uto",
+      authDomain: "taskboard-9f9ce.firebaseapp.com",
+      projectId: "taskboard-9f9ce",
+      storageBucket: "taskboard-9f9ce.appspot.com"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    // Anonymous session for public submitters
+    firebase.auth().signInAnonymously().catch(console.error);
+
+    window.DB = firebase.firestore();
+    window.STORE = firebase.storage();
+
+    window.MOSH_PERMS = {
+      OWNERS: ["porphuram@gmail.com"],
+      JEFFS:  ["Jeffrey.King@memphistn.gov"]
+    };
+  </script>
+  <script src="assets/app.js" type="module"></script>
 </body>
 </html>
