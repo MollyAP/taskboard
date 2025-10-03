@@ -107,13 +107,31 @@
     </dialog>
 
 
-    <script>
-        window.MOSH_BOARD = {
-            owner: "MollyAP",
-            repo: "taskboard",
-            perPage: 100
-        };
-    </script>
+<!-- Firebase (CDN compat builds) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore-compat.js"></script>
+
+<script>
+  // TODO: replace with your config from Firebase console (Project settings → Web app)
+  const firebaseConfig = {
+    apiKey: "AIzaSyALQgOtVWbq5HzjDkw382SDq9mkph_6Uto",
+    authDomain: "Taskboard.firebaseapp.com",
+    projectId: "taskboard-9f9ce",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  // No sign-up required: anonymous session
+  firebase.auth().signInAnonymously().catch(console.error);
+  window.DB = firebase.firestore();
+
+  // passwords (change OWNER to whatever you want)
+  window.MOSH_PERMS = {
+    JEFF_PASS: "approved",
+    OWNER_PASS: "owner"
+  };
+</script>
+
     <script src="assets/app.js" type="module"></script>
 </body>
 </html>

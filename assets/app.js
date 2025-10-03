@@ -1,5 +1,12 @@
-// --- Config & DOM refs ---
-const cfg = window.MOSH_BOARD;
+// app.js
+
+const db = window.DB;
+const PERMS = window.MOSH_PERMS || { JEFF_PASS: "approved", OWNER_PASS: "owner" };
+
+let jeffMode = false;
+let ownerMode = false;
+
+// DOM refs
 const lanes = {
   requested: document.getElementById('lane-requested'),
   'priority': document.getElementById('lane-priority'),
@@ -7,153 +14,200 @@ const lanes = {
   finished: document.getElementById('lane-finished')
 };
 
-const GH_API = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}`;
+const modal = document.getElementById('taskModal');
+const addBtn = document.getElementById('addTaskBtn');
+const cancelModal = document.getElementById('cancelModal');
+const submitIssue = document.getElementById('submitIssue');
+const actionsBar = document.querySelector('.actions');
 
-// --- Card factory ---
-function cardTemplate(issue) {
-  const url = issue.html_url;
-  const title = issue.title.replace(/^\[Task\]\s*/i, '');
-  const createdBy = issue.user?.login || 'unknown';
-  const body = issue.body || '';
+// Add an Unlock button for roles
+const unlockBtn = document.createElement('button');
+unlockBtn.className = 'btn no-arrow';
+unlockBtn.textContent = 'Unlock';
+actionsBar.appendChild(unlockBtn);
 
-  // Parse submitter name (from the Issue Form body)
-  // Looks for "**Your name**" then captures the next non-empty line
-  const nameMatch = body.match(/\*\*Your name\*\*[\s\S]*?\n\n([^\n]+)/i);
-  const submitterName = (nameMatch?.[1] || createdBy).trim();
-
-  // Parse due date (no lookbehind—portable)
-  // Looks for "Suggested due date" and captures the next line
-  const dueMatch = body.match(/Suggested due date[^\n]*\n+([^\n]+)/i);
-  const due = (dueMatch?.[1] || '').trim();
-
-  const el = document.createElement('article');
-  el.className = 'card';
-  el.innerHTML = `
-    <div class="title">${title}</div>
-    <div class="meta">
-      <span class="tag">By ${submitterName}</span>
-      ${issue.labels.some(l => l.name === 'priority') ? '<span class="tag tag-priority">Priority</span>' : ''}
-      ${due ? `<span class="tag tag-due">Due ${due}</span>` : ''}
-      <a href="${url}" target="_blank" rel="noopener">View in GitHub</a>
-    </div>
-  `;
-  return el;
-}
-
-// --- GitHub fetch ---
-async function fetchAllIssues() {
-  // Open + closed (so Finished can include closed issues)
-  const endpoints = [
-    `${GH_API}/issues?state=open&per_page=${cfg.perPage}`,
-    `${GH_API}/issues?state=closed&per_page=${cfg.perPage}`
-  ];
-
-  const pages = await Promise.all(
-    endpoints.map(u => fetch(u, { headers: { 'Accept': 'application/vnd.github+json' } }).then(r => {
-      if (!r.ok) throw new Error(`GitHub API: ${r.status}`);
-      return r.json();
-    }))
-  );
-
-  // Filter out PRs (GitHub mixes them into /issues)
-  return pages.flat().filter(it => !it.pull_request);
-}
-
-// --- Group issues into lanes by label ---
-function bucketize(issues) {
-  const by = { requested: [], priority: [], 'in-progress': [], finished: [] };
-  for (const issue of issues) {
-    const labels = issue.labels.map(l => l.name);
-    if (labels.includes('finished')) by['finished'].push(issue);
-    else if (labels.includes('in-progress')) by['in-progress'].push(issue);
-    else if (labels.includes('priority')) by['priority'].push(issue);
-    else by['requested'].push(issue);
+unlockBtn.addEventListener('click', () => {
+  const role = prompt('Type "jeff" to approve priority or "owner" to move tasks:').trim().toLowerCase();
+  if (role === 'jeff') {
+    const pw = prompt('Jeff password:');
+    jeffMode = (pw === PERMS.JEFF_PASS);
+    alert(jeffMode ? 'Jeff mode ON' : 'Wrong password');
+  } else if (role === 'owner') {
+    const pw = prompt('Owner password:');
+    ownerMode = (pw === PERMS.OWNER_PASS);
+    alert(ownerMode ? 'Owner mode ON' : 'Wrong password');
   }
-  return by;
+});
+
+// ---------- Firestore helpers ----------
+const tasksCol = db.collection('tasks');
+
+function addTask(task) {
+  return tasksCol.add({
+    title: task.title,
+    details: task.details,
+    submitter: task.submitter,
+    priorityRequested: task.priorityRequested || false,
+    priority: false,
+    status: 'requested',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
 }
 
+function updateTask(id, patch) {
+  patch.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+  return tasksCol.doc(id).update(patch);
+}
+
+function deleteTask(id) {
+  return tasksCol.doc(id).delete();
+}
+
+// ---------- UI ----------
 function clearLanes() {
   Object.values(lanes).forEach(el => (el.innerHTML = ''));
 }
 
-// --- Render board ---
+function tag(text, extra='') {
+  const span = document.createElement('span');
+  span.className = `tag ${extra}`.trim();
+  span.textContent = text;
+  return span;
+}
+
+function cardTemplate(task) {
+  const el = document.createElement('article');
+  el.className = 'card';
+
+  const title = document.createElement('div');
+  title.className = 'title';
+  title.textContent = task.title;
+
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.append(tag(`By ${task.submitter}`));
+  if (task.priority) meta.append(tag('Priority', 'tag-priority'));
+  if (task.priorityRequested && !task.priority) meta.append(tag('Priority requested', 'tag-due'));
+
+  // controls 
+  const controls = document.createElement('div');
+  controls.className = 'meta';
+
+  if (jeffMode && !task.priority) {
+    const approve = document.createElement('button');
+    approve.className = 'btn no-arrow';
+    approve.textContent = 'Approve Priority';
+    approve.addEventListener('click', async () => {
+      try { await updateTask(task.id, { priority: true }); }
+      catch (e) { alert('Update failed'); console.error(e); }
+    });
+    controls.append(approve);
+  }
+
+  if (ownerMode) {
+    const toReq = document.createElement('button');
+    toReq.className = 'btn no-arrow';
+    toReq.textContent = 'Requested';
+    toReq.addEventListener('click', () => updateTask(task.id, { status: 'requested' }).catch(console.error));
+
+    const toProg = document.createElement('button');
+    toProg.className = 'btn no-arrow';
+    toProg.textContent = 'In Progress';
+    toProg.addEventListener('click', () => updateTask(task.id, { status: 'in-progress' }).catch(console.error));
+
+    const toFin = document.createElement('button');
+    toFin.className = 'btn no-arrow';
+    toFin.textContent = 'Finished';
+    toFin.addEventListener('click', () => updateTask(task.id, { status: 'finished' }).catch(console.error));
+
+    const del = document.createElement('button');
+    del.className = 'btn no-arrow';
+    del.textContent = 'Delete';
+    del.addEventListener('click', async () => {
+      if (confirm('Delete this task?')) await deleteTask(task.id);
+    });
+
+    controls.append(toReq, toProg, toFin, del);
+  }
+
+  el.append(title, meta);
+  if (controls.childElementCount) el.append(controls);
+  return el;
+}
+
+function bucketize(tasks) {
+  const by = { requested: [], priority: [], 'in-progress': [], finished: [] };
+  for (const t of tasks) {
+    if (t.status === 'finished') by.finished.push(t);
+    else if (t.status === 'in-progress') by['in-progress'].push(t);
+    else if (t.priority) by.priority.push(t);
+    else by.requested.push(t);
+  }
+  return by;
+}
+
 function render(byLabel) {
   clearLanes();
   Object.entries(byLabel).forEach(([name, list]) => {
-    // Oldest first for a gentle “FIFO” feel; swap to desc if you prefer
-    list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-
     const lane = lanes[name];
-    list.forEach(issue => lane.appendChild(cardTemplate(issue)));
 
+    // consistent header height already handled by CSS; render cards:
     if (!list.length) {
       const empty = document.createElement('div');
       empty.className = 'card';
       empty.innerHTML = '<div class="meta">No cards</div>';
       lane.appendChild(empty);
+      return;
     }
+
+    list.sort((a,b) => (a.createdAt?.seconds||0) - (b.createdAt?.seconds||0));
+    list.forEach(task => lane.appendChild(cardTemplate(task)));
   });
 }
 
-// --- Refresh cycle ---
-async function refresh() {
-  try {
-    const issues = await fetchAllIssues();
-    const buckets = bucketize(issues);
-    render(buckets);
-  } catch (err) {
+// ---------- Live feed ----------
+let unsub = null;
+function startFeed() {
+  if (unsub) unsub();
+  unsub = tasksCol.orderBy('createdAt','asc').onSnapshot(snap => {
+    const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render(bucketize(data));
+  }, err => {
     console.error(err);
-    alert('Failed to fetch tasks from GitHub. Make sure the repo is public (or add a proxy/token).');
-  }
+    alert('Failed to load tasks. Check Firestore permissions.');
+  });
 }
 
-// --- Modal + Issue form handoff ---
-const modal = document.getElementById('taskModal');
-const addBtn = document.getElementById('addTaskBtn');
-const cancelModal = document.getElementById('cancelModal');
-const submitIssue = document.getElementById('submitIssue');
-
+// ---------- Modal submit ----------
 addBtn.addEventListener('click', () => {
   const saved = localStorage.getItem('mosh_submitter');
   if (saved) document.getElementById('submitterName').value = saved;
   modal.showModal();
 });
+cancelModal.addEventListener('click', (e) => { e.preventDefault(); modal.close(); });
 
-cancelModal.addEventListener('click', (e) => {
-  e.preventDefault();
-  modal.close();
-});
-
-submitIssue.addEventListener('click', (e) => {
+submitIssue.addEventListener('click', async (e) => {
   e.preventDefault();
   const name = document.getElementById('submitterName').value.trim();
   const t = document.getElementById('taskTitle').value.trim();
   const d = document.getElementById('taskDetails').value.trim();
-  const pr = document.getElementById('taskPriority').value;
+  const pr = document.getElementById('taskPriority').value.includes('Requesting');
 
   if (!name || !t || !d) return alert('Please fill required fields.');
   localStorage.setItem('mosh_submitter', name);
 
-  const title = encodeURIComponent(`[Task] ${t}`);
-  const body = encodeURIComponent(
-`**Your name**
-
-${name}
-
-**Task details**
-
-${d}
-
-**Priority request**
-
-${pr}`
-  );
-
-  const url = `https://github.com/${cfg.owner}/${cfg.repo}/issues/new?template=task.yml&title=${title}&body=${body}`;
-  window.open(url, '_blank');
-  modal.close();
+  try {
+    await addTask({ title: t, details: d, submitter: name, priorityRequested: pr });
+    modal.close();
+  } catch (err) {
+    console.error(err);
+    alert('Could not add task. Check Firestore config/rules.');
+  }
 });
 
-// --- Controls & initial load ---
-document.getElementById('refreshBtn').addEventListener('click', refresh);
-refresh();
+// Refresh button 
+document.getElementById('refreshBtn').addEventListener('click', startFeed);
+
+// Init
+startFeed();
