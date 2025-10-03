@@ -1,0 +1,50 @@
+name: New Task Request
+description: Submit a website task for MoSH. All tasks start as `requested`. Only Jeff can approve Priority.
+title: "[Task] <short descriptive title>"
+labels: [requested]
+body:
+- type: markdown
+attributes:
+value: |
+**Important:** Only Jeff can approve Priority. Marking Priority below will file it as a request; Jeff may add the `priority` label after review.
+- type: input
+id: submitter
+attributes:
+label: Your name
+description: Who is requesting this?
+placeholder: e.g., Jane Doe
+validations:
+required: true
+- type: input
+id: contact
+attributes:
+label: Contact (email or extension)
+placeholder: jane@moshmemphis.com
+- type: textarea
+id: details
+attributes:
+label: Task details
+description: Be specific—include URLs, assets, deadlines.
+placeholder: What do you need, where does it go, and when is it needed?
+validations:
+required: true
+- type: dropdown
+id: prio_request
+attributes:
+label: Priority request
+description: Only Jeff can approve Priority.
+options:
+- Not requesting priority
+- Requesting priority (subject to Jeff approval)
+validations:
+required: true
+- type: input
+id: due
+attributes:
+label: Suggested due date (optional)
+placeholder: 2025-10-10
+- type: textarea
+id: assets
+attributes:
+label: Links to assets (optional)
+placeholder: Google Drive, SiteWrench event, images, etc.
